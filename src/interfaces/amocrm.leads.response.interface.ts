@@ -7,6 +7,7 @@ export interface AmocrmLeadsResponse {
       status_id: number;
       pipeline_id: number;
       created_at: number;
+      responsible_user_id: number;
     }[];
   };
 }

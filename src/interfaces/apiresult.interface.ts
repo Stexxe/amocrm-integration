@@ -3,6 +3,8 @@ type Lead = {
   name: string;
   price: number;
   status: { name: string };
+  responsibleUser: { name: string };
+  createdAt: string;
 };
 
 export type ApiResult = Lead[];
