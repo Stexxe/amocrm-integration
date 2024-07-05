@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { LeadsController } from './leads/leads.controller';
+import { AmocrmLeadsService } from './leads/amocrm-leads.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [ConfigModule.forRoot()],
+  controllers: [LeadsController],
+  providers: [AmocrmLeadsService],
 })
 export class AppModule {}
