@@ -1,19 +1,38 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { AmocrmLeadsService } from './amocrm-leads.service';
 import { Lead } from '../interfaces/lead.interface';
+import { PipelineService } from "../pipeline/pipeline.service";
+import { ApiResult } from "../interfaces/apiresult.interface";
 
 @Controller('api')
 export class LeadsController {
-  private leadsService: AmocrmLeadsService;
-  constructor(leadsService: AmocrmLeadsService) {
-    this.leadsService = leadsService;
+  constructor(private leadsService: AmocrmLeadsService, private pipelineService: PipelineService) {
   }
   @Get('leads')
   async getAll(
     @Query('query') query: string,
-  ): Promise<Lead[] | { error: any }> {
+  ): Promise<ApiResult | { error: any }> {
     try {
-      return await this.leadsService.getLeads(query);
+      const leads = await this.leadsService.getLeads(query);
+      const pipelineIds = new Set<number>();
+      for (let lead of leads) {
+        pipelineIds.add(lead.pipelineId);
+      }
+
+      let statuses = {};
+      for (let id of pipelineIds) {
+        for (let status of await this.pipelineService.getStatuses(id)) {
+          statuses[status.id] = {name: status.name};
+        }
+      }
+
+      return leads.map((lead) => ({
+        id: lead.id,
+        name: lead.name,
+        price: lead.price,
+        status: statuses[lead.statusId]
+      }))
+
     } catch (error) {
       return {
         error: error.message,

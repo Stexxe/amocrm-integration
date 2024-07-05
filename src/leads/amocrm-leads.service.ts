@@ -34,6 +34,8 @@ export class AmocrmLeadsService {
       id: info.id,
       name: info.name,
       price: info.price,
+      pipelineId: info.pipeline_id,
+      statusId: info.status_id
     }));
   }
 }
