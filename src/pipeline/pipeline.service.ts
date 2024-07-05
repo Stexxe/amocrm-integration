@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { AmocrmPipelineResponse } from "../interfaces/amocrm.pipeline.response.interface";
-import { ConfigService } from "@nestjs/config";
-import { AmocrmErrorResponse } from "../interfaces/amocrm.error.response.interface";
-import { PipelineStatus } from "../interfaces/pipeline-status.interface";
+import { AmocrmPipelineResponse } from '../interfaces/amocrm.pipeline.response.interface';
+import { ConfigService } from '@nestjs/config';
+import { AmocrmErrorResponse } from '../interfaces/amocrm.error.response.interface';
+import { PipelineStatus } from '../interfaces/pipeline-status.interface';
 
 @Injectable()
 export class PipelineService {
@@ -25,9 +25,11 @@ export class PipelineService {
       throw Error((body as AmocrmErrorResponse).detail);
     }
 
-    return (body as AmocrmPipelineResponse)._embedded.statuses.map((status) => ({
-      id: status.id,
-      name: status.name
-    }))
+    return (body as AmocrmPipelineResponse)._embedded.statuses.map(
+      (status) => ({
+        id: status.id,
+        name: status.name,
+      }),
+    );
   }
 }

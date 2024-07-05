@@ -1,13 +1,15 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { AmocrmLeadsService } from './amocrm-leads.service';
 import { Lead } from '../interfaces/lead.interface';
-import { PipelineService } from "../pipeline/pipeline.service";
-import { ApiResult } from "../interfaces/apiresult.interface";
+import { PipelineService } from '../pipeline/pipeline.service';
+import { ApiResult } from '../interfaces/apiresult.interface';
 
 @Controller('api')
 export class LeadsController {
-  constructor(private leadsService: AmocrmLeadsService, private pipelineService: PipelineService) {
-  }
+  constructor(
+    private leadsService: AmocrmLeadsService,
+    private pipelineService: PipelineService,
+  ) {}
   @Get('leads')
   async getAll(
     @Query('query') query: string,
@@ -15,14 +17,14 @@ export class LeadsController {
     try {
       const leads = await this.leadsService.getLeads(query);
       const pipelineIds = new Set<number>();
-      for (let lead of leads) {
+      for (const lead of leads) {
         pipelineIds.add(lead.pipelineId);
       }
 
-      let statuses = {};
-      for (let id of pipelineIds) {
-        for (let status of await this.pipelineService.getStatuses(id)) {
-          statuses[status.id] = {name: status.name};
+      const statuses = {};
+      for (const id of pipelineIds) {
+        for (const status of await this.pipelineService.getStatuses(id)) {
+          statuses[status.id] = { name: status.name };
         }
       }
 
@@ -30,9 +32,8 @@ export class LeadsController {
         id: lead.id,
         name: lead.name,
         price: lead.price,
-        status: statuses[lead.statusId]
-      }))
-
+        status: statuses[lead.statusId],
+      }));
     } catch (error) {
       return {
         error: error.message,
