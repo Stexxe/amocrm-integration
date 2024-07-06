@@ -3,6 +3,7 @@ import { AmocrmLeadsService } from './amocrm-leads.service';
 import { PipelineService } from '../pipeline/pipeline.service';
 import { ApiResult } from '../interfaces/apiresult.interface';
 import { UserService } from '../user/user.service';
+import { ContactsService } from '../contacts/contacts.service';
 
 @Controller('api')
 export class LeadsController {
@@ -10,6 +11,7 @@ export class LeadsController {
     private leadsService: AmocrmLeadsService,
     private pipelineService: PipelineService,
     private userService: UserService,
+    private contactsService: ContactsService,
   ) {}
   @Get('leads')
   async getAll(
@@ -40,6 +42,10 @@ export class LeadsController {
       const formatDt = (d: Date) =>
         `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
 
+      const contacts = await this.contactsService.getContacts(
+        leads.map(({ id }) => id),
+      );
+
       return leads.map((lead) => ({
         id: lead.id,
         name: lead.name,
@@ -47,6 +53,7 @@ export class LeadsController {
         status: statuses[lead.statusId],
         responsibleUser: users[lead.responsibleUserId],
         createdAt: formatDt(new Date(lead.createdAt * 1000)),
+        contacts: contacts[lead.id],
       }));
     } catch (error) {
       return {

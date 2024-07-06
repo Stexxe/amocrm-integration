@@ -1,36 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { Lead } from '../interfaces/lead.interface';
-import { AmocrmErrorResponse } from '../interfaces/amocrm.error.response.interface';
 import { AmocrmLeadsResponse } from '../interfaces/amocrm.leads.response.interface';
-import { ConfigService } from '@nestjs/config';
+import { AmocrmFetcherService } from '../amocrm-fetcher/amocrm-fetcher.service';
 
 @Injectable()
 export class AmocrmLeadsService {
-  constructor(private configService: ConfigService) {}
+  constructor(private amocrmService: AmocrmFetcherService) {}
 
   async getLeads(query: string | undefined): Promise<Lead[]> {
     const queryString = query === undefined ? '' : `?query=${query}`;
-    const response = await fetch(
-      `${this.configService.get<string>('BASE_URL')}/api/v4/leads${queryString}`,
-      {
-        headers: {
-          Authorization: `Bearer ${this.configService.get<string>('ACCESS_TOKEN')}`,
-        },
-      },
+    const body = await this.amocrmService.read<AmocrmLeadsResponse>(
+      `/api/v4/leads${queryString}`,
     );
 
-    if (response.status === 204) {
+    if (body == null) {
       return [];
     }
 
-    const body: AmocrmErrorResponse | AmocrmLeadsResponse =
-      await response.json();
-
-    if (response.status >= 400) {
-      throw Error((body as AmocrmErrorResponse).detail);
-    }
-
-    return (body as AmocrmLeadsResponse)._embedded.leads.map((info) => ({
+    return body._embedded.leads.map((info) => ({
       id: info.id,
       name: info.name,
       price: info.price,
