@@ -1,17 +1,17 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { AmocrmLeadsService } from './amocrm-leads.service';
-import { PipelineService } from '../pipeline/pipeline.service';
+import { AmocrmPipelineService } from '../pipeline/amocrm-pipeline.service';
 import { ApiResult } from '../interfaces/apiresult.interface';
-import { UserService } from '../user/user.service';
-import { ContactsService } from '../contacts/contacts.service';
+import { AmocrmUserService } from '../user/amocrm-user.service';
+import { AmocrmContactsService } from '../contacts/amocrm-contacts.service';
 
 @Controller('api')
 export class LeadsController {
   constructor(
     private leadsService: AmocrmLeadsService,
-    private pipelineService: PipelineService,
-    private userService: UserService,
-    private contactsService: ContactsService,
+    private pipelineService: AmocrmPipelineService,
+    private userService: AmocrmUserService,
+    private contactsService: AmocrmContactsService,
   ) {}
   @Get('leads')
   async getAll(

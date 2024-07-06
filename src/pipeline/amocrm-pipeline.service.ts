@@ -4,7 +4,7 @@ import { PipelineStatus } from '../interfaces/pipeline-status.interface';
 import { AmocrmFetcherService } from '../amocrm-fetcher/amocrm-fetcher.service';
 
 @Injectable()
-export class PipelineService {
+export class AmocrmPipelineService {
   constructor(private amocrmService: AmocrmFetcherService) {}
 
   async getStatuses(pipelineId: number): Promise<PipelineStatus[]> {

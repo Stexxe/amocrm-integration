@@ -5,7 +5,7 @@ import { AmocrmLinksResponse } from '../interfaces/amocrm.links.response.interfa
 import { AmocrmContactResponse } from '../interfaces/amocrm.contact.response.interface';
 
 @Injectable()
-export class ContactsService {
+export class AmocrmContactsService {
   constructor(private amocrmService: AmocrmFetcherService) {}
 
   async getContacts(leadIds: number[]): Promise<{ [k: number]: Contact[] }> {

@@ -4,7 +4,7 @@ import { AmocrmUsersResponse } from '../interfaces/amocrm.users.response.interfa
 import { AmocrmFetcherService } from '../amocrm-fetcher/amocrm-fetcher.service';
 
 @Injectable()
-export class UserService {
+export class AmocrmUserService {
   constructor(private amocrmService: AmocrmFetcherService) {}
 
   async getUser(userId: number): Promise<User> {
